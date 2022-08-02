@@ -18,6 +18,13 @@ export const getLeaves = createAsyncThunk(
 );
 
 
+export const getUsers = async () => {
+  const response = await axios.get("/users/for-admin");
+  console.log("get Users response:  ", response);
+  return response.data.data;
+};
+
+
 export const getCategories = async () => {
   const response = await axios.get("/leaves-categories");
   console.log("get Users response:  ", response);

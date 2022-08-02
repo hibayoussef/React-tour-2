@@ -32,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 function UserNavbarHeader(props) {
   const user = useSelector(({ auth }) => auth.user);
 
+  console.log("user.data: ", user.data);
   const classes = useStyles();
 
   return (
@@ -54,11 +55,13 @@ function UserNavbarHeader(props) {
         <Avatar
           className={clsx(classes.avatar, 'avatar w-72 h-72 p-8 box-content')}
           alt="user photo"
-          src={
-            user.data.photoURL && user.data.photoURL !== ''
-              ? user.data.photoURL
-              : 'assets/images/avatars/profile.jpg'
-          }
+          src=
+          // {
+          //   user.data.photoURL && user.data.photoURL !== ''
+          //     ? user.data.photoURL
+              // :
+               'assets/images/avatars/profile.jpg'
+          // }
         />
       </div>
     </AppBar>

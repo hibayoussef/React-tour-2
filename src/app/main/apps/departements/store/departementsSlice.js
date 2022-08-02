@@ -10,7 +10,7 @@ export const getDepartements = createAsyncThunk(
   async () => {
     const response = await axios.get("/departments");
     const data = await response.data.data;
-    console.log("get all departements: ", data);
+    // console.log('response: ', data.data.data)
     return data;
   }
 );

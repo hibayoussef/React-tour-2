@@ -14,6 +14,15 @@ export const updateUserData = createAsyncThunk('chatPanel/user/updateUserData', 
   return data;
 });
 
+export const getUsers = async () => {
+  const response = await axios.get("/users/for-admin");
+  console.log("get Users response:  ", response);
+  return response.data.data;
+};
+
+
+
+
 const userSlice = createSlice({
   name: 'chatPanel/user',
   initialState: null,

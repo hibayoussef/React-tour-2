@@ -15,6 +15,7 @@ import GroupButttonApproveStatus from "./groupButtonApproveStatus";
 import GroupButttonPaymentStatus from "./groupButtonPaymentStatus";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,6 +48,174 @@ const InvoiceDetails = () => {
       setInvoice(response);
     });
   }, []);
+
+  // beneficiery
+  let { beneficiary } = invoice;
+  console.log("beneficiary......:", beneficiary);
+
+  beneficiary = {
+    beneficiaryName: "Beta apps LLC",
+    iban: "AE850260001015689723401",
+    accountNumber: "",
+    swiftCode: "EBILAEAD",
+    bankName: "EMIRATES NBD BANK PJSC",
+    bankCode: "EBIL",
+    branchName: "branch1",
+    branchAddress: "branch1address",
+    branchCode: "",
+    clearanceCode: "",
+  };
+
+  invoice.beneficiary = beneficiary;
+
+  console.log("beneficiary......after:", beneficiary);
+  console.log("invoice ABC: ", invoice);
+
+  // OCR
+  let dataBoxes = [
+    {
+      key: "beneficiaryName",
+      value: "Beta",
+    },
+    {
+      key: "iban",
+      value: "AE103829101013",
+    },
+    {
+      key: "accountNumber",
+      value: "19235221235547",
+    },
+    {
+      key: "swiftCode",
+      value: "EBILAEADEBILAEADEBILAEAD",
+    },
+    {
+      key: "bankName",
+      value: "London",
+    },
+    {
+      key: "bankCode",
+      value: "EBILEBILEBIL",
+    },
+    {
+      key: "branchName",
+      value: "branch1branch1branch1",
+    },
+    {
+      key: "branchAddress",
+      value: "branch1addressbranch1address",
+    },
+    {
+      key: "branchCode",
+      value: "aaaaaaaaaaa",
+    },
+    {
+      key: "clearanceCode",
+      value: "bbbbbbbbbbbb",
+    },
+  ];
+
+  console.log("databoxes: ", dataBoxes);
+
+  invoice.dataBoxes = dataBoxes;
+
+  console.log("dataBoxesdataBoxes: ", invoice.dataBoxes[0].value);
+
+  const compareKeys = (dataBoxesValue, key, value) => {
+    switch (key) {
+      case "beneficiaryName": {
+        if (value === null || value === "" || value === undefined) {
+          const valueBene = dataBoxesValue;
+          return valueBene;
+        } else {
+          return value;
+        }
+      }
+      case "iban": {
+        if (value === null || value === "" || value === undefined) {
+          const valueBene = dataBoxesValue;
+          return valueBene;
+        } else {
+          return value;
+        }
+      }
+      case "swiftCode": {
+        if (value === null || value === "" || value === undefined) {
+          const valueBene = dataBoxesValue;
+          return valueBene;
+        } else {
+          return value;
+        }
+      }
+      case "accountNumber": {
+        if (value === null || value === "" || value === undefined) {
+          const valueBene = dataBoxesValue;
+          return valueBene;
+        } else {
+          return value;
+        }
+      }
+      case "branchCode": {
+        if (value === null || value === "" || value === undefined) {
+          const valueBene = dataBoxesValue;
+          return valueBene;
+        } else {
+          return value;
+        }
+      }
+      case "bankName": {
+        if (value === null || value === "" || value === undefined) {
+          const valueBene = dataBoxesValue;
+          return valueBene;
+        } else {
+          return value;
+        }
+      }
+      case "bankCode": {
+        if (value === null || value === "" || value === undefined) {
+          const valueBene = dataBoxesValue;
+          return valueBene;
+        } else {
+          return value;
+        }
+      }
+      case "branchName": {
+        if (value === null || value === "" || value === undefined) {
+          const valueBene = dataBoxesValue;
+          return valueBene;
+        } else {
+          return value;
+        }
+      }
+      case "branchAddress": {
+        if (value === null || value === "" || value === undefined) {
+          const valueBene = dataBoxesValue;
+          return valueBene;
+        } else {
+          return value;
+        }
+      }
+      case "branchCode": {
+        if (value === null || value === "" || value === undefined) {
+          const valueBene = dataBoxesValue;
+          return valueBene;
+        } else {
+          return value;
+        }
+      }
+      case "clearanceCode": {
+        if (value === null || value === "" || value === undefined) {
+          const valueBene = dataBoxesValue;
+          console.log("clear code value: ", valueBene);
+          return valueBene;
+        } else {
+          return value;
+        }
+      }
+      default:
+        return;
+    }
+  };
 
   const handleClick = () => {
     console.info(`You clicked ${options[selectedIndex]}`);
@@ -281,6 +450,295 @@ const InvoiceDetails = () => {
                   // label="Size"
                   id="outlined-size-normal"
                   value={invoice.grossAmount || ""}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+
+            <br />
+            <br />
+            <Divider />
+            <br />
+            <br />
+            <h2 style={{ fontWeight: 700 }}>Beneficiary Details</h2>
+            <br />
+            <Grid container item direction={breakpoint ? "row" : "column"}>
+              <Grid
+                container
+                item
+                xs={4}
+                sm={4}
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <h3>Beneficiary Name</h3>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  className="mt-8 mb-16"
+                  // label="Size"
+                  id="outlined-size-normal"
+                  value={compareKeys(
+                    invoice.dataBoxes[0].value,
+                    "bankName",
+                    invoice.beneficiary.beneficiaryName
+                  )}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction={breakpoint ? "row" : "column"}>
+              <Grid
+                container
+                item
+                xs={4}
+                sm={4}
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <h3>IBAN</h3>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  className="mt-8 mb-16"
+                  // label="Size"
+                  id="outlined-size-normal"
+                  value={compareKeys(
+                    invoice.dataBoxes[1].value,
+                    "bankName",
+                    invoice.beneficiary.iban
+                  )}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction={breakpoint ? "row" : "column"}>
+              <Grid
+                container
+                item
+                xs={4}
+                sm={4}
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <h3>Account Number</h3>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  className="mt-8 mb-16"
+                  // label="Size"
+                  id="outlined-size-normal"
+                  // value={beneficiary.accountNumber || ""}
+                  value={compareKeys(
+                    invoice.dataBoxes[2].value,
+                    "accountNumber",
+                    invoice.beneficiary.accountNumber
+                  )}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction={breakpoint ? "row" : "column"}>
+              <Grid
+                container
+                item
+                xs={4}
+                sm={4}
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <h3>Swift Code</h3>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  className="mt-8 mb-16"
+                  // label="Size"
+                  id="outlined-size-normal"
+                  value={compareKeys(
+                    invoice.dataBoxes[3].value,
+                    "swiftCode",
+                    invoice.beneficiary.swiftCode
+                  )}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction={breakpoint ? "row" : "column"}>
+              <Grid
+                container
+                item
+                xs={4}
+                sm={4}
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <h3>Bank Name</h3>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  className="mt-8 mb-16"
+                  // label="Size"
+                  id="outlined-size-normal"
+                  value={compareKeys(
+                    invoice.dataBoxes[4].value,
+                    "bankName",
+                    invoice.beneficiary.bankName
+                  )}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction={breakpoint ? "row" : "column"}>
+              <Grid
+                container
+                item
+                xs={4}
+                sm={4}
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <h3>Bank Code</h3>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  className="mt-8 mb-16"
+                  // label="Size"
+                  id="outlined-size-normal"
+                  value={compareKeys(
+                    invoice.dataBoxes[5].value,
+                    "bankCode",
+                    invoice.beneficiary.bankCode
+                  )}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction={breakpoint ? "row" : "column"}>
+              <Grid
+                container
+                item
+                xs={4}
+                sm={4}
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <h3>Branch Name</h3>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  className="mt-8 mb-16"
+                  // label="Size"
+                  id="outlined-size-normal"
+                  value={compareKeys(
+                    invoice.dataBoxes[6].value,
+                    "branchName",
+                    invoice.beneficiary.branchName
+                  )}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction={breakpoint ? "row" : "column"}>
+              <Grid
+                container
+                item
+                xs={4}
+                sm={4}
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <h3>Branch Address</h3>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  className="mt-8 mb-16"
+                  // label="Size"
+                  id="outlined-size-normal"
+                  value={compareKeys(
+                    invoice.dataBoxes[7].value,
+                    "branchAddress",
+                    invoice.beneficiary.branchAddress
+                  )}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction={breakpoint ? "row" : "column"}>
+              <Grid
+                container
+                item
+                xs={4}
+                sm={4}
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <h3>Branch Code</h3>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  className="mt-8 mb-16"
+                  // label="Size"
+                  id="outlined-size-normal"
+                  value={compareKeys(
+                    invoice.dataBoxes[8].value,
+                    "branchCode",
+                    invoice.beneficiary.branchCode
+                  )}
+                  variant="outlined"
+                  fullWidth
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item direction={breakpoint ? "row" : "column"}>
+              <Grid
+                container
+                item
+                xs={4}
+                sm={4}
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="center"
+              >
+                <h3>Clearance Code</h3>
+              </Grid>
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  className="mt-8 mb-16"
+                  // label="Size"
+                  id="outlined-size-normal"
+                  // value={beneficiary.clearanceCode || ""}
+                  value={compareKeys(
+                    invoice.dataBoxes[9].value,
+                    "clearanceCode",
+                    invoice.beneficiary.clearanceCode
+                  )}
                   variant="outlined"
                   fullWidth
                 />

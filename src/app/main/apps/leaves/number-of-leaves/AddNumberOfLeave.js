@@ -6,10 +6,10 @@ import { useState } from "react";
 import _ from "@lodash";
 import { FormProvider } from "react-hook-form";
 import reducer from "../store";
-import AddLeaveHeader from "./AddLeaveHeader";
+import AddNumberOfLeaveHeader from "./AddNumberOfLeaveHeader";
 import ShippingTab from "./tabs/ShippingTab";
 
-function AddLeave(props) {
+function AddNumberOfLeave(props) {
   const [tabValue, setTabValue] = useState(0);
 
   /**
@@ -26,7 +26,7 @@ function AddLeave(props) {
           toolbar: "p-0",
           header: "min-h-72 h-72 sm:h-136 sm:min-h-136",
         }}
-        header={<AddLeaveHeader />}
+        header={<AddNumberOfLeaveHeader />}
         contentToolbar={
           <Tabs
             value={tabValue}
@@ -53,4 +53,4 @@ function AddLeave(props) {
   );
 }
 
-export default withReducer("leavesApp", reducer)(AddLeave);
+export default withReducer("leavesApp", reducer)(AddNumberOfLeave);

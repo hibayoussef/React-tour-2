@@ -36,18 +36,29 @@ function Widget8(props) {
           </div>
         </div>
         <div className="p-16 pt-8 flex flex-row items-end">
-          <Typography className="text-44 font-semibold leading-none" color="inherit">
+          <Typography
+            className="text-44 font-semibold leading-none"
+            color="inherit"
+          >
             {data.today}
           </Typography>
           <div className="flex flex-col mx-8">
-            {data.change.value > 0 && <Icon className="text-green text-20">trending_up</Icon>}
-            {data.change.value < 0 && <Icon className="text-red text-20">trending_down</Icon>}
+            {data.change.value > 0 && (
+              <Icon className="text-green text-20">trending_up</Icon>
+            )}
+            {data.change.value < 0 && (
+              <Icon className="text-red text-20">trending_down</Icon>
+            )}
             <Typography className="font-semibold" color="textSecondary">
               {`${data.change.value}(${data.change.percentage}%)`}
             </Typography>
           </div>
         </div>
-        <Tabs value={tabIndex} onChange={(ev, index) => setTabIndex(index)} variant="fullWidth">
+        <Tabs
+          value={tabIndex}
+          onChange={(ev, index) => setTabIndex(index)}
+          variant="fullWidth"
+        >
           <Tab label="1Day" className="min-w-0" />
           <Tab label="1Week" className="min-w-0" />
           <Tab label="1Month" className="min-w-0" />

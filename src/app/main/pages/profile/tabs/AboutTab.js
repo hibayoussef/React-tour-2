@@ -15,12 +15,13 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-function AboutTab() {
+function AboutTab(user) {
+  console.log("users  aaaaaaaaa: ", user);
   const [data, setData] = useState(null);
   const test = (x) => x + 1;
 
   useEffect(() => {
-    axios.get('/api/profile/about').then((res) => {
+    axios.get("/api/profile/about").then((res) => {
       setData(res.data);
     });
   }, []);
@@ -48,7 +49,11 @@ function AboutTab() {
     <motion.div variants={container} initial="hidden" animate="show">
       <div className="md:flex max-w-2xl">
         <div className="flex flex-col flex-1 md:ltr:pr-32 md:rtl:pl-32">
-          <Card component={motion.div} variants={item} className="w-full mb-32 rounded-16 shadow">
+          <Card
+            component={motion.div}
+            variants={item}
+            className="w-full mb-32 rounded-16 shadow"
+          >
             <AppBar position="static" elevation={0}>
               <Toolbar className="px-8">
                 <Typography
@@ -63,17 +68,23 @@ function AboutTab() {
 
             <CardContent>
               <div className="mb-24">
-                <Typography className="font-semibold mb-4 text-15">Gender</Typography>
+                <Typography className="font-semibold mb-4 text-15">
+                  Gender
+                </Typography>
                 <Typography>{general.gender}</Typography>
               </div>
 
               <div className="mb-24">
-                <Typography className="font-semibold mb-4 text-15">Birthday</Typography>
+                <Typography className="font-semibold mb-4 text-15">
+                  Birthday
+                </Typography>
                 <Typography>{general.birthday}</Typography>
               </div>
 
               <div className="mb-24">
-                <Typography className="font-semibold mb-4 text-15">Locations</Typography>
+                <Typography className="font-semibold mb-4 text-15">
+                  Locations
+                </Typography>
 
                 {general.locations.map((location) => (
                   <div className="flex items-center" key={location}>
@@ -86,13 +97,19 @@ function AboutTab() {
               </div>
 
               <div className="mb-24">
-                <Typography className="font-semibold mb-4 text-15">About Me</Typography>
+                <Typography className="font-semibold mb-4 text-15">
+                  About Me
+                </Typography>
                 <Typography>{general.about}</Typography>
               </div>
             </CardContent>
           </Card>
 
-          <Card component={motion.div} variants={item} className="w-full mb-32 rounded-16 shadow">
+          <Card
+            component={motion.div}
+            variants={item}
+            className="w-full mb-32 rounded-16 shadow"
+          >
             <AppBar position="static" elevation={0}>
               <Toolbar className="px-8">
                 <Typography
@@ -107,17 +124,23 @@ function AboutTab() {
 
             <CardContent>
               <div className="mb-24">
-                <Typography className="font-semibold mb-4 text-15">Occupation</Typography>
+                <Typography className="font-semibold mb-4 text-15">
+                  Occupation
+                </Typography>
                 <Typography>{work.occupation}</Typography>
               </div>
 
               <div className="mb-24">
-                <Typography className="font-semibold mb-4 text-15">Skills</Typography>
+                <Typography className="font-semibold mb-4 text-15">
+                  Skills
+                </Typography>
                 <Typography>{work.skills}</Typography>
               </div>
 
               <div className="mb-24">
-                <Typography className="font-semibold mb-4 text-15">Jobs</Typography>
+                <Typography className="font-semibold mb-4 text-15">
+                  Jobs
+                </Typography>
                 <table className="">
                   <tbody>
                     {work.jobs.map((job) => (
@@ -126,7 +149,9 @@ function AboutTab() {
                           <Typography>{job.company}</Typography>
                         </td>
                         <td className="px-16">
-                          <Typography color="textSecondary">{job.date}</Typography>
+                          <Typography color="textSecondary">
+                            {job.date}
+                          </Typography>
                         </td>
                       </tr>
                     ))}
@@ -136,7 +161,11 @@ function AboutTab() {
             </CardContent>
           </Card>
 
-          <Card component={motion.div} variants={item} className="w-full mb-32 rounded-16 shadow">
+          <Card
+            component={motion.div}
+            variants={item}
+            className="w-full mb-32 rounded-16 shadow"
+          >
             <AppBar position="static" elevation={0}>
               <Toolbar className="px-8">
                 <Typography
@@ -151,12 +180,16 @@ function AboutTab() {
 
             <CardContent>
               <div className="mb-24">
-                <Typography className="font-semibold mb-4 text-15">Address</Typography>
+                <Typography className="font-semibold mb-4 text-15">
+                  Address
+                </Typography>
                 <Typography>{contact.address}</Typography>
               </div>
 
               <div className="mb-24">
-                <Typography className="font-semibold mb-4 text-15">Tel.</Typography>
+                <Typography className="font-semibold mb-4 text-15">
+                  Tel.
+                </Typography>
 
                 {contact.tel.map((tel) => (
                   <div className="flex items-center" key={tel}>
@@ -166,7 +199,9 @@ function AboutTab() {
               </div>
 
               <div className="mb-24">
-                <Typography className="font-semibold mb-4 text-15">Website</Typography>
+                <Typography className="font-semibold mb-4 text-15">
+                  Website
+                </Typography>
 
                 {contact.websites.map((website) => (
                   <div className="flex items-center" key={website}>
@@ -176,21 +211,23 @@ function AboutTab() {
               </div>
 
               <div className="mb-24">
-                <Typography className="font-semibold mb-4 text-15">Emails</Typography>
+                <Typography className="font-semibold mb-4 text-15">
+                  Emails
+                </Typography>
 
-                {contact.emails.map((email) => (
-                  <div className="flex items-center" key={email}>
-                    <Typography>{email}</Typography>
-                  </div>
-                ))}
+                {user.user.data.email}
               </div>
             </CardContent>
           </Card>
         </div>
 
         <div className="flex flex-col md:w-320">
-          <Card component={motion.div} variants={item} className="w-full mb-32 rounded-16 shadow">
-            <AppBar position="static" elevation={0}>
+          {/* <Card
+            component={motion.div}
+            variants={item}
+            className="w-full mb-32 rounded-16 shadow"
+          > */}
+          {/* <AppBar position="static" elevation={0}>
               <Toolbar className="px-8">
                 <Typography
                   variant="subtitle1"
@@ -203,8 +240,8 @@ function AboutTab() {
                   See 454 more
                 </Button>
               </Toolbar>
-            </AppBar>
-            <CardContent className="flex flex-wrap p-16">
+            </AppBar> */}
+          {/* <CardContent className="flex flex-wrap p-16">
               {friends.map((friend) => (
                 <img
                   key={friend.id}
@@ -213,10 +250,14 @@ function AboutTab() {
                   alt={friend.name}
                 />
               ))}
-            </CardContent>
-          </Card>
+            </CardContent> */}
+          {/* </Card> */}
 
-          <Card component={motion.div} variants={item} className="w-full mb-32 rounded-16 shadow">
+          {/* <Card
+            component={motion.div}
+            variants={item}
+            className="w-full mb-32 rounded-16 shadow"
+          >
             <AppBar position="static" elevation={0}>
               <Toolbar className="px-8">
                 <Typography
@@ -241,11 +282,18 @@ function AboutTab() {
                     <ListItemText
                       primary={
                         <div className="flex">
-                          <Typography className="font-medium" color="secondary" paragraph={false}>
+                          <Typography
+                            className="font-medium"
+                            color="secondary"
+                            paragraph={false}
+                          >
                             {group.name}
                           </Typography>
 
-                          <Typography className="mx-4 font-normal" paragraph={false}>
+                          <Typography
+                            className="mx-4 font-normal"
+                            paragraph={false}
+                          >
                             {group.category}
                           </Typography>
                         </div>
@@ -261,7 +309,7 @@ function AboutTab() {
                 ))}
               </List>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </motion.div>

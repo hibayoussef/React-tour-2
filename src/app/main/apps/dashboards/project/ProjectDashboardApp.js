@@ -47,9 +47,9 @@ function ProjectDashboardApp(props) {
     <FusePageSimple
       classes={{
         header:
-          'min-h-160 h-160 lg:ltr:rounded-br-20 lg:rtl:rounded-bl-20 lg:ltr:mr-12 lg:rtl:ml-12',
-        toolbar: 'min-h-56 h-56 items-end',
-        rightSidebar: 'w-288 border-0 py-12',
+          "min-h-160 h-160 lg:ltr:rounded-br-20 lg:rtl:rounded-bl-20 lg:ltr:mr-12 lg:rtl:ml-12",
+        toolbar: "min-h-56 h-56 items-end",
+        rightSidebar: "w-288 border-0 py-12",
         content: classes.content,
       }}
       header={<ProjectDashboardAppHeader pageLayout={pageLayout} />}
@@ -62,9 +62,13 @@ function ProjectDashboardApp(props) {
           variant="scrollable"
           scrollButtons="off"
           className="w-full px-24 -mx-4 min-h-40"
-          classes={{ indicator: 'flex justify-center bg-transparent w-full h-full' }}
+          classes={{
+            indicator: "flex justify-center bg-transparent w-full h-full",
+          }}
           TabIndicatorProps={{
-            children: <Divider className="w-full h-full rounded-full opacity-50" />,
+            children: (
+              <Divider className="w-full h-full rounded-full opacity-50" />
+            ),
           }}
         >
           <Tab
@@ -87,7 +91,7 @@ function ProjectDashboardApp(props) {
       content={
         <div className="p-12 lg:ltr:pr-0 lg:rtl:pl-0">
           {tabValue === 0 && <HomeTab />}
-          {tabValue === 1 && <BudgetSummaryTab />}
+          {tabValue === 0 && <BudgetSummaryTab />}
           {tabValue === 2 && <TeamMembersTab />}
         </div>
       }

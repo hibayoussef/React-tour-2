@@ -19,29 +19,28 @@ const tempNavigation = [
     type: "group",
     icon: "apps",
     children: [
-      // {
-      //   id: "dashboards",
-      //   title: "Dashboards",
-      //   translate: "DASHBOARDS",
-      //   type: "collapse",
-      //   icon: "dashboard",
-      // children: [
-      //   {
-      //     auth: authRoles.super_admin,
-      //     id: "analytics-dashboard",
-      //     title: "Analytics",
-      //     type: "item",
-      //     url: "/apps/dashboards/analytics",
-      //   },
-      //   {
-      //     id: "project-dashboard",
-      //     auth: authRoles.user,
-      //     title: "Project",
-      //     type: "item",
-      //     url: "/apps/dashboards/project",
-      //   },
-      // ],
-      // },
+      {
+        id: "dashboards",
+        title: "Dashboards",
+        translate: "DASHBOARDS",
+        type: "collapse",
+        icon: "dashboard",
+        children: [
+          {
+            id: "project-dashboard",
+            auth: authRoles.user,
+            title: "Project",
+            type: "item",
+            url: "/apps/dashboards/project",
+          },
+          {
+            id: "analytics-dashboard",
+            title: "Analytics",
+            type: "item",
+            url: "/apps/dashboards/analytics",
+          },
+        ],
+      },
       {
         id: "profile",
         title: "Profile",
@@ -337,6 +336,14 @@ const tempNavigation = [
             exact: true,
             auth: authRoles.user,
           },
+          // {
+          //   id: "leaves-section-add-number-of-leaves",
+          //   title: "select Number of leaves",
+          //   type: "item",
+          //   url: "/apps/leaves-section/number-of-leaves",
+          //   exact: true,
+          //   auth: authRoles.admin,
+          // },
         ],
       },
 

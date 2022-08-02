@@ -71,27 +71,22 @@ const AddDialog = () => {
 
   useEffect(() => {
     getDepartments().then((response) => {
-      console.log("departements response in approve: ", response);
       setDepartments(response);
     });
   }, []);
 
-
- 
- 
   const handleDialogClose = () => setDialogOpen(false);
   const handleClickOpen = () => {
     setDialogOpen(true);
   };
 
-
-  const handleNameChange =(e) =>{
-    setName(e.target.value)
-  }
-  const handleDescriptionChange =(e) =>{
-    setDescription(e.target.value)
-  }
-   const addJobHandleClick = () => {
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+  const addJobHandleClick = () => {
     enqueueSnackbar(
       "Job added successfully",
       { variant: "success" },
@@ -104,15 +99,10 @@ const AddDialog = () => {
       { TransitionComponent: Slide }
     );
   };
- 
- 
-
- 
 
   return (
     <>
       <ButtonGroup size="medium">
-       
         <Button
           onClick={(ev) => {
             handleClickOpen();
@@ -120,13 +110,10 @@ const AddDialog = () => {
           className="whitespace-nowrap"
           variant="contained"
           color="secondary"
-          
         >
           Add new Job
         </Button>
-       
       </ButtonGroup>
-
 
       {/* assign to user dialog */}
 
@@ -137,10 +124,15 @@ const AddDialog = () => {
         open={dialogOpen}
         onClose={handleDialogClose}
       >
-        <DialogTitle sx={{ fontWeight: "bold", fontSize: "10rem", marginBottom: '2rem', color: "#212529" }}>
-      
-        
-         Add Job
+        <DialogTitle
+          sx={{
+            fontWeight: "bold",
+            fontSize: "10rem",
+            marginBottom: "2rem",
+            color: "#212529",
+          }}
+        >
+          Add Job
         </DialogTitle>
         <div
           style={{
@@ -149,68 +141,70 @@ const AddDialog = () => {
             marginLeft: 10,
           }}
         >
-          <DialogContentText style={{ fontWeight: 600,  padding: "2rem", paddingLeft: "2rem" }}>
+          <DialogContentText
+            style={{ fontWeight: 600, padding: "2rem", paddingLeft: "2rem" }}
+          >
             {" "}
             <FlagIcon
               style={{ fontSize: 40, color: "#aacc00", paddingRight: "1rem" }}
             />
             You must fill in all fields
-            
           </DialogContentText>
-          <DialogContentText  style={{ paddingRight: "2rem", paddingLeft: "2rem", paddingBottom: '2rem' }}>When you add a job, you enter a new job on the project, choose the correct job name and add it to the Department you want
+          <DialogContentText
+            style={{
+              paddingRight: "2rem",
+              paddingLeft: "2rem",
+              paddingBottom: "2rem",
+            }}
+          >
+            When you add a job, you enter a new job on the project, choose the
+            correct job name and add it to the Department you want
           </DialogContentText>
         </div>
 
         <DialogContent style={{ marginTop: "6rem" }}>
-        <div className="flex">
-           
-        
-                <TextField
-                  value={name} 
-                  onChange={handleNameChange}
-                  className="mb-24"
-                  label="Name"
-                  id="name"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  color= 'primary'
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <WorkIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              
+          <div className="flex">
+            <TextField
+              value={name}
+              onChange={handleNameChange}
+              className="mb-24"
+              label="Name"
+              id="name"
+              variant="outlined"
+              required
+              fullWidth
+              color="primary"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <WorkIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
           </div>
 
           <div className="flex">
-            
-           
-                <TextField
-                  value={description}
-                  onChange={handleDescriptionChange}
-                  className="mb-5"
-                  label="description"
-                  id="description"
-                  variant="outlined"
-                  fullWidth
-                  color= 'primary'
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <DescriptionIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-             
+            <TextField
+              value={description}
+              onChange={handleDescriptionChange}
+              className="mb-5"
+              label="description"
+              id="description"
+              variant="outlined"
+              fullWidth
+              color="primary"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <DescriptionIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
           </div>
-<div  className="mt-10" >
-         
-          <Autocomplete
+          <div className="mt-10">
+            <Autocomplete
               id="combo-box-demo"
               onChange={(event, value) => {
                 console.log("value vvv:", value);
@@ -218,38 +212,35 @@ const AddDialog = () => {
                 setDepartmentId(value.id);
               }} // prints the selected value
               // value={users || ""}
-             
+
               options={departments || []}
               getOptionLabel={(option) => option.title || ""}
               sx={{ width: 900 }}
               // defaultValue={departments?.find((v) => v.title[0])}
               renderInput={(params) => (
-                
                 <TextField
                   {...params}
                   variant="outlined"
                   placeholder="Search Department"
                   fullWidth
-                  InputProps={{ ...params.InputProps, style: { fontSize: 15  } ,  startAdornment: (
-                    <InputAdornment position="start">
-                      <PostAddIcon />
-                    </InputAdornment>
-                  )}}
+                  InputProps={{
+                    ...params.InputProps,
+                    style: { fontSize: 15 },
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PostAddIcon />
+                      </InputAdornment>
+                    ),
+                  }}
                   InputLabelProps={{ style: { fontSize: 15 } }}
-                  
-                 
                 />
               )}
             />
-
-</div>
-  
+          </div>
         </DialogContent>
 
-    
-       
         <DialogActions>
-          <div style={{ paddingRight: "1rem" , paddingTop: '2rem'}}>
+          <div style={{ paddingRight: "1rem", paddingTop: "2rem" }}>
             <Button
               onClick={handleDialogClose}
               style={{ color: "#dc3c24", fontWeight: 500 }}
@@ -259,14 +250,12 @@ const AddDialog = () => {
             </Button>
 
             <Button
-
-                onClick={(ev) => {
-                    ev.stopPropagation();
-                    addJobHandleClick(ev);
-                    dispatch(addWork({ name, description, departmentId }));
-                    handleDialogClose()
-                  }}
-           
+              onClick={(ev) => {
+                ev.stopPropagation();
+                addJobHandleClick(ev);
+                dispatch(addWork({ name, description, departmentId }));
+                handleDialogClose();
+              }}
               style={{ color: "#212529", fontWeight: 500 }}
               color="primary"
               autoFocus

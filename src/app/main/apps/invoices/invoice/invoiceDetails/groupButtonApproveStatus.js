@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import FlagIcon from "@mui/icons-material/Flag";
 import { makeStyles } from "@material-ui/core/styles";
-import Autocomplete from "@mui/material/Autocomplete";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import { getUsers } from "../../store/invoiceSlice";
 import { useEffect } from "react";
 

@@ -18,10 +18,10 @@ import {
   KeyboardDatePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { getCategories } from "../../store/leavesSlice";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { getCategories, getUsers } from "../../store/leavesSlice";
 import { useEffect } from "react";
-import PostAddIcon from '@material-ui/icons/PostAdd';
+import PostAddIcon from "@material-ui/icons/PostAdd";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import FlagIcon from "@material-ui/icons/Flag";
 
@@ -45,9 +45,10 @@ function ShippingTab(props) {
   const classes = useStyles();
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
-  const [description, setDescription] = useState("");
+  const [numberOfDaysAllowed, setNumberOfDaysAllowed] = useState("");
   const [categories, setCategories] = useState([]);
   const [leaveCategoryId, setLeaveCategoryId] = useState(0);
+  const [users, setUsers] = useState([]);
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -61,14 +62,21 @@ function ShippingTab(props) {
     setToDate(date);
   };
 
-  const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);
+  const handleNumberOfDaysAllowedChange = (event) => {
+    setNumberOfDaysAllowed(event.target.value);
   };
 
   useEffect(() => {
     getCategories().then((response) => {
       console.log("getCategories response in approve: ", response);
       setCategories(response);
+    });
+  }, []);
+
+  useEffect(() => {
+    getUsers().then((response) => {
+      console.log("getUserssssss: ", response);
+      setUsers(response);
     });
   }, []);
 
@@ -130,40 +138,46 @@ function ShippingTab(props) {
         </DialogContentText>
       </div>
 
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <div className="flex -mx-4">
-          <KeyboardDatePicker
-            inputVariant="outlined"
-            className="mt-8 mb-16"
-            margin="normal"
-            id="date-picker-dialog"
-            label="From Date"
-            format="MM/dd/yyyy"
-            KeyboardButtonProps={{
-              "aria-label": "change date",
-            }}
-            value={fromDate}
-            onChange={handleFromDateChange}
-          />
+      <div className="mt-10">
+        <Autocomplete
+          id="combo-box-demo"
+          onChange={(event, value) => {
+            console.log("value vvv:", value);
+            console.log("value.id: ", value.id);
+            setUserId(value.id);
+          }} // prints the selected value
+          // value={users || ""}
 
-          <KeyboardDatePicker
-            inputVariant="outlined"
-            className="mt-8 mb-16 ml-6"
-            margin="normal"
-            id="date-picker-dialog"
-            label="To Date"
-            format="MM/dd/yyyy"
-            KeyboardButtonProps={{
-              "aria-label": "change date",
-            }}
-            value={toDate}
-            onChange={handleToDateChange}
-          />
-        </div>
-      </MuiPickersUtilsProvider>
+          options={users || []}
+          getOptionLabel={(option) => option.name || ""}
+          sx={{ width: 900 }}
+          // defaultValue={departments?.find((v) => v.title[0])}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              placeholder="Search User"
+              fullWidth
+              InputProps={{
+                ...params.InputProps,
+                style: { fontSize: 15 },
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PostAddIcon />
+                  </InputAdornment>
+                ),
+              }}
+              InputLabelProps={{ style: { fontSize: 15 } }}
+            />
+          )}
+        />
+      </div>
+
+      <br />
+
       <TextField
         className="mt-8 mb-16"
-        label="Description"
+        label="numbers of days allowed"
         id="extraShippingFee"
         variant="outlined"
         InputProps={{
@@ -174,8 +188,8 @@ function ShippingTab(props) {
             </InputAdornment>
           ),
         }}
-        value={description}
-        onChange={handleDescriptionChange}
+        value={numberOfDaysAllowed}
+        onChange={handleNumberOfDaysAllowedChange}
         fullWidth
       />
       <div className="mt-10">
@@ -253,7 +267,12 @@ function ShippingTab(props) {
               }}
               onClick={(ev) => {
                 dispatch(
-                  addLeave({ leaveCategoryId, description, fromDate, toDate })
+                  addLeave({
+                    leaveCategoryId,
+                    numberOfDaysAllowed,
+                    fromDate,
+                    toDate,
+                  })
                 );
                 ev.stopPropagation();
                 handleDepartementCreatedMessageClick(ev);

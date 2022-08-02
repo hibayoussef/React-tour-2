@@ -53,7 +53,7 @@ function ShippingTab(props) {
 
   const handleCreateInvoiceMessageClick = () => {
     enqueueSnackbar(
-      "Invoice created successfully",
+      "Department created successfully",
       { variant: "success" },
       {
         anchorOrigin: {
@@ -156,7 +156,7 @@ function ShippingTab(props) {
                 );
                 dispatch(addDepartement({ maxNumberOfEmployees, title }));
                 ev.stopPropagation();
-                // handleDepartementCreatedMessageClick(ev);
+                handleDepartementCreatedMessageClick(ev);
               }}
             >
               Create

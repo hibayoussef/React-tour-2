@@ -40,6 +40,7 @@ const statusArr = [
 ];
 
 function UserSidebar(props) {
+  console.log("hyyyyyyyyyyyyyy");
   const dispatch = useDispatch();
   const user = useSelector(({ chatApp }) => chatApp.user);
   const { control, handleSubmit, watch } = useForm({ defaultValues: user });

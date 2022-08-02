@@ -12,7 +12,8 @@ import axios from "axios";
 /**
  * Axios HTTP Request defaults
  */
-axios.defaults.baseURL = "https://ite-ria.herokuapp.com/api/v1/";
+// axios.defaults.baseURL = "http://192.168.137.1:3000/api/v1/";
+axios.defaults.baseURL = "https://ite-ria.herokuapp.com/api/v1";
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 // axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
 

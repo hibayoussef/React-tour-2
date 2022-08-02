@@ -15,6 +15,7 @@ import TimelineTab from "./tabs/TimelineTab";
 import IconButton from "@material-ui/core/IconButton";
 import React, { createRef } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -43,6 +44,8 @@ function ProfilePage() {
   const classes = useStyles();
   const [selectedTab, setSelectedTab] = useState(0);
   const [file, setFile] = useState(null);
+  const user = useSelector(({ auth }) => auth.user);
+  console.log("user.dataaaaaaa: ", user.data);
 
   function handleTabChange(event, value) {
     setSelectedTab(value);
@@ -103,7 +106,7 @@ function ProfilePage() {
                   variant="h4"
                   color="inherit"
                 >
-                  John Doe
+                  {user.data.displayName}
                 </Typography>
               </motion.div>
 
@@ -153,19 +156,19 @@ function ProfilePage() {
               disableRipple
               label="About"
             />
-            <Tab
+            {/* <Tab
               className="text-14 font-semibold min-h-40 min-w-64 mx-4"
               disableRipple
               label="Photos & Videos"
-            />
+            /> */}
           </Tabs>
         </>
       }
       content={
         <div className="p-16 sm:p-24">
           {selectedTab === 0 && <TimelineTab />}
-          {selectedTab === 1 && <AboutTab />}
-          {selectedTab === 2 && <PhotosVideosTab />}
+          {selectedTab === 1 && <AboutTab user={user} />}
+          {/* {selectedTab === 2 && <PhotosVideosTab />} */}
         </div>
       }
     />
