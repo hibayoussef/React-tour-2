@@ -18,12 +18,21 @@ export const getLeaves = createAsyncThunk(
 );
 
 
+export const getProfileInformation = createAsyncThunk(
+  "leavesApp/leaves/getProfileInformation",
+  async () => {
+    const response = await axios.get("/users/profiles/my-profile");
+    const data = await response.data.data;
+    console.log("profile dataaa: ", data);
+    return data;
+  }
+);
+
 export const getUsers = async () => {
   const response = await axios.get("/users/for-admin");
   console.log("get Users response:  ", response);
   return response.data.data;
 };
-
 
 export const getCategories = async () => {
   const response = await axios.get("/leaves-categories");
@@ -110,6 +119,7 @@ const leavesSlice = createSlice({
       console.log("data approval: ", data);
       leavesAdapter.setAll(state, data);
     },
+    [getProfileInformation.fulfilled]: leavesAdapter.setAll,
 
     [removeOrders.fulfilled]: (state, action) =>
       leavesAdapter.removeMany(state, action.payload),

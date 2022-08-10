@@ -34,6 +34,8 @@ import AllTable from "./tabs/all";
 import ReviewTable from "./tabs/review";
 import ApprovalTable from "./tabs/approval";
 import PaymentTable from "./tabs/payment";
+import InAnalysticTable from "./tabs/inanalystic";
+import ErrorIcon from "@material-ui/icons/Error";
 
 const useStyles = makeStyles(() => ({
   divider: {
@@ -156,6 +158,8 @@ function InvoicesTable(props) {
         return <CheckCircleIcon />;
       case "rejected":
         return <CancelIcon />;
+      case "failed":
+        return <ErrorIcon />;
       default:
         return <CancelIcon />;
     }
@@ -197,6 +201,7 @@ function InvoicesTable(props) {
               <Tab label="Review" />
               <Tab label="Approval" />
               <Tab label="Payment" />
+              <Tab label="In Analyzing Process" />
             </Tabs>
           </Paper>
           {/* end tabs */}
@@ -213,6 +218,9 @@ function InvoicesTable(props) {
           </div>
           <div className={tabValue !== 3 ? "hidden" : ""}>
             <PaymentTable />
+          </div>
+          <div className={tabValue !== 4 ? "hidden" : ""}>
+            <InAnalysticTable />
           </div>
         </FuseScrollbars>
 

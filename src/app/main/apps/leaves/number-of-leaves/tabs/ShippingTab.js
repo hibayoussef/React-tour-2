@@ -1,29 +1,26 @@
-import React, { useState } from "react";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import { motion } from "framer-motion";
+// import { addInvoice } from "../../../store/invoiceSlice";
 import { useDispatch } from "react-redux";
 import "react-datepicker/dist/react-datepicker.css";
 import Slide from "@material-ui/core/Slide";
 import { useSnackbar } from "notistack";
-import SubtitlesIcon from "@material-ui/icons/Subtitles";
-import FormatListNumberedIcon from "@material-ui/icons/FormatListNumbered";
-import { addLeave } from "../../store/leaveSlice";
-import "date-fns";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import { FieldArray, Field, Form, Formik } from "formik";
+import { Card, CardContent } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { getCategories, getUsers } from "../../store/leavesSlice";
-import { useEffect } from "react";
-import PostAddIcon from "@material-ui/icons/PostAdd";
-import DialogContentText from "@material-ui/core/DialogContentText";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { getUsers, getCategories } from "../../store/leavesSlice";
+import { addNumberOfLeaves } from "../../store/leaveSlice";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 import FlagIcon from "@material-ui/icons/Flag";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import PostAddIcon from "@material-ui/icons/PostAdd";
+import SubtitlesIcon from "@material-ui/icons/Subtitles";
+import PersonIcon from "@material-ui/icons/Person";
+import CategoryIcon from "@material-ui/icons/Category";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,222 +40,274 @@ const useStyles = makeStyles((theme) => ({
 function ShippingTab(props) {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [fromDate, setFromDate] = useState(new Date());
-  const [toDate, setToDate] = useState(new Date());
-  const [numberOfDaysAllowed, setNumberOfDaysAllowed] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [leaveCategoryId, setLeaveCategoryId] = useState(0);
+  // const [amount, setAmount] = useState("");
+
   const [users, setUsers] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [userId, setUserId] = useState(0);
+  const [open, setOpen] = React.useState(false);
+  const [options, setOptions] = React.useState([]);
+  const [employeeLevel, setEmployeeLevel] = React.useState("");
+
+  // const [employeeLevel, setEmployeeLevel] = useState("");
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  const handleFromDateChange = (date) => {
-    setFromDate(date);
-    console.log("date issssssssss: ", date);
-    console.log("date issssssssss: ", fromDate);
+  const handleCreateSalaryScaleMessageClick = () => {
+    enqueueSnackbar(
+      "Number of Leaves Created successfully", 
+      { variant: "success" },
+      {
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "right",
+        },
+      },
+      { TransitionComponent: Slide }
+    );
   };
-
-  const handleToDateChange = (date) => {
-    setToDate(date);
-  };
-
-  const handleNumberOfDaysAllowedChange = (event) => {
-    setNumberOfDaysAllowed(event.target.value);
-  };
-
-  useEffect(() => {
-    getCategories().then((response) => {
-      console.log("getCategories response in approve: ", response);
-      setCategories(response);
-    });
-  }, []);
 
   useEffect(() => {
     getUsers().then((response) => {
-      console.log("getUserssssss: ", response);
+      console.log("jobs response in approve: ", response);
       setUsers(response);
     });
   }, []);
 
-  const handleDepartementCreatedMessageClick = () => {
-    enqueueSnackbar(
-      "Leave created successfully",
-      { variant: "success" },
-      {
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "right",
-        },
-      },
-      { TransitionComponent: Slide }
-    );
-  };
-
-  const handleCreateInvoiceMessageClick = () => {
-    enqueueSnackbar(
-      "Invoice created successfully",
-      { variant: "success" },
-      {
-        anchorOrigin: {
-          vertical: "top",
-          horizontal: "right",
-        },
-      },
-      { TransitionComponent: Slide }
-    );
-  };
+  useEffect(() => {
+    getCategories().then((response) => {
+      console.log("Categories response in approve: ", response);
+      setCategories(response);
+    });
+  }, []);
 
   return (
-    <>
-      <div
-        style={{
-          backgroundColor: "#F8F9FA",
-          borderRadius: 10,
-          marginLeft: 10,
-        }}
-      >
-        <DialogContentText
-          style={{ fontWeight: 600, padding: "2rem", paddingLeft: "2rem" }}
-        >
-          {" "}
-          <FlagIcon
-            style={{ fontSize: 40, color: "#aacc00", paddingRight: "1rem" }}
-          />
-          You must fill in all fields <span style={{ color: "red" }}>But</span>
-        </DialogContentText>
-        <DialogContentText
-          style={{
-            paddingRight: "2rem",
-            paddingLeft: "2rem",
-            paddingBottom: "2rem",
-          }}
-        >
-          before u create leave u must check of the number of Leaves that
-          remains from your available leaves
-        </DialogContentText>
-      </div>
+    <Formik
+      enableReinitialize
+      initialValues={{
+        // userId,
+        userLeavesCategories: [{ leaveCategoryId: 0, numberOfDaysAllowed: 0 }],
+      }}
+      onSubmit={async (values) => {
+        const formatedEntities = values.userLeavesCategories.map((en) => {
+          // this to formate data to be like api payload
+          const formatedItem = {};
+          if (en?.leaveCategoryId)
+            formatedItem.leaveCategoryId = en?.leaveCategoryId.id;
+          if (en?.numberOfDaysAllowed)
+            formatedItem.numberOfDaysAllowed = en?.numberOfDaysAllowed;
+          // if (userId) formatedItem.userId = userId;
+          return formatedItem;
+        });
 
-      <div className="mt-10">
-        <Autocomplete
-          id="combo-box-demo"
-          onChange={(event, value) => {
-            console.log("value vvv:", value);
-            console.log("value.id: ", value.id);
-            setUserId(value.id);
-          }} // prints the selected value
-          // value={users || ""}
-
-          options={users || []}
-          getOptionLabel={(option) => option.name || ""}
-          sx={{ width: 900 }}
-          // defaultValue={departments?.find((v) => v.title[0])}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              placeholder="Search User"
-              fullWidth
-              InputProps={{
-                ...params.InputProps,
-                style: { fontSize: 15 },
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <PostAddIcon />
-                  </InputAdornment>
-                ),
-              }}
-              InputLabelProps={{ style: { fontSize: 15 } }}
-            />
-          )}
-        />
-      </div>
-
-      <br />
-
-      <TextField
-        className="mt-8 mb-16"
-        label="numbers of days allowed"
-        id="extraShippingFee"
-        variant="outlined"
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              {" "}
-              <SubtitlesIcon />
-            </InputAdornment>
-          ),
-        }}
-        value={numberOfDaysAllowed}
-        onChange={handleNumberOfDaysAllowedChange}
-        fullWidth
-      />
-      <div className="mt-10">
-        <Autocomplete
-          id="combo-box-demo"
-          onChange={(event, value) => {
-            console.log("value vvv:", value);
-            console.log("value.id: ", value.id);
-            setLeaveCategoryId(value.id);
-          }} // prints the selected value
-          // value={users || ""}
-
-          options={categories || []}
-          getOptionLabel={(option) => option.name || ""}
-          sx={{ width: 900 }}
-          // defaultValue={departments?.find((v) => v.title[0])}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              placeholder="Search Category"
-              fullWidth
-              InputProps={{
-                ...params.InputProps,
-                style: { fontSize: 15 },
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <PostAddIcon />
-                  </InputAdornment>
-                ),
-              }}
-              InputLabelProps={{ style: { fontSize: 15 } }}
-            />
-          )}
-        />
-      </div>
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0, transition: { delay: 0.3 } }}
-      >
-        <Grid
-          container
-          direction="row-reverse"
-          justifyContent="flex-start"
-          alignItems="flex-end"
-          style={{
-            paddingTop: "11rem",
-          }}
-        >
-          <Grid item>
-            <Button
-              className="whitespace-nowrap mx-4"
-              variant="contained"
-              color="secondary"
+        dispatch(
+          addNumberOfLeaves({ userId, userLeavesCategories: formatedEntities })
+        );
+      }}
+    >
+      {({ values, isSubmitting, handleChange, setFieldValue }) => (
+        <Form autoComplete="off">
+          <div
+            style={{
+              backgroundColor: "#F8F9FA",
+              borderRadius: 10,
+              marginLeft: 15,
+              marginRight: "3rem",
+              padding: "3rem",
+              marginBottom: "6rem",
+            }}
+          >
+            <h4
               style={{
-                padding: "1rem",
-                paddingLeft: "3rem",
-                paddingRight: "3rem",
+                fontWeight: 600,
+                paddingLeft: "2rem",
+                paddingRight: "2rem",
               }}
-              // onClick={handleRemoveProduct}
             >
-              Cancel
-            </Button>
+              {" "}
+              <FlagIcon
+                style={{ fontSize: 40, color: "#aacc00", paddingRight: "1rem" }}
+              />
+              You must fill in all fields{" "}
+            </h4>
+          </div>
+
+          <Grid container>
+            <Grid item>
+              <FieldArray name="userLeavesCategories">
+                {({ push, remove }) => (
+                  <>
+                    <Grid item style={{ padding: "1rem" }}>
+                      <Autocomplete
+                        id="combo-box-demo"
+                        onChange={(event, value) => {
+                          console.log("value vvv:", value);
+                          console.log("value.id: ", value.id);
+                          setUserId(value.id);
+                        }} // prints the selected value
+                        // value={users || ""}
+
+                        options={users || []}
+                        getOptionLabel={(option) => option.name || ""}
+                        sx={{ width: 900 }}
+                        // defaultValue={departments?.find((v) => v.title[0])}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            variant="outlined"
+                            placeholder="Search User"
+                            fullWidth
+                            InputProps={{
+                              ...params.InputProps,
+                              style: { fontSize: 15 },
+                              startAdornment: (
+                                <InputAdornment position="start">
+                                  <PersonIcon />
+                                </InputAdornment>
+                              ),
+                            }}
+                            InputLabelProps={{ style: { fontSize: 15 } }}
+                          />
+                        )}
+                      />
+                    </Grid>
+                    {values?.userLeavesCategories.map((_, index) => (
+                      <Grid
+                        container
+                        direction="column"
+                        item
+                        style={{ paddingTop: "1.3rem" }}
+                        key={index}
+                      >
+                        {/* <Grid item style={{ paddingLeft: "1rem" }}>
+                          <h3>Add a salary scale for the job you want:</h3>
+                        </Grid> */}
+
+                        <Grid item container direction="row">
+                          <Grid item style={{ padding: "1rem" }}>
+                            <Field
+                              name={`userLeavesCategories[${index}].numberOfDaysAllowed`}
+                              id={`userLeavesCategories[${index}].numberOfDaysAllowed`}
+                              component={TextField}
+                              onChange={handleChange}
+                              InputProps={{
+                                startAdornment: (
+                                  <InputAdornment position="start">
+                                    {" "}
+                                    <SubtitlesIcon />
+                                  </InputAdornment>
+                                ),
+                              }}
+                              type="number"
+                              label="numberOfDaysAllowed"
+                              variant="outlined"
+                              fullWidth
+                              style={{ width: 440 }}
+                            />
+                          </Grid>
+
+                          <Grid item style={{ padding: "1rem" }}>
+                            <Autocomplete
+                              id={`userLeavesCategories[${index}].leaveCategoryId`}
+                              name={`userLeavesCategories[${index}].leaveCategoryId`}
+                              options={categories}
+                              getOptionLabel={(option) => option.name}
+                              onChange={(event, value) => {
+                                // console.log("jobId value: ", value);
+                                setFieldValue(
+                                  `userLeavesCategories[${index}].leaveCategoryId`,
+                                  value
+                                );
+                              }}
+                              style={{ width: 440 }}
+                              // loading={loading}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  // onChange={handleChange}
+                                  label="Choose Category"
+                                  InputProps={{
+                                    ...params.InputProps,
+                                    style: { fontSize: 15 },
+                                    startAdornment: (
+                                      <InputAdornment position="start">
+                                        <CategoryIcon />
+                                      </InputAdornment>
+                                    ),
+                                  }}
+                                  // value={values?.level}
+                                  // name={`entities.${index}.employeeLevel`}
+                                  variant="outlined"
+                                  fullWidth
+                                />
+                              )}
+                            />
+                          </Grid>
+                        </Grid>
+
+                        <Grid
+                          item
+                          style={{ paddingLeft: "1rem", paddingTop: "1rem" }}
+                        >
+                          <ButtonGroup
+                            variant="outlined"
+                            aria-label="outlined button group"
+                          >
+                            <Button
+                              onClick={() =>
+                                push({
+                                  userId: 0,
+                                  leaveCategoryId: 0,
+                                  numberOfDaysAllowed: 0,
+                                })
+                              }
+                              style={{
+                                color: "black",
+                                fontWeight: "500",
+                                fontSize: "1.3rem",
+                              }}
+                            >
+                              Add
+                            </Button>
+
+                            <Button
+                              onClick={() => remove(index)}
+                              style={{
+                                color: "red",
+                                fontWeight: "500",
+                                fontSize: "1.3rem",
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          </ButtonGroup>
+                        </Grid>
+                      </Grid>
+                    ))}
+                  </>
+                )}
+              </FieldArray>
+            </Grid>
           </Grid>
-          <Grid item>
+
+          {/* <pre>{JSON.stringify({ values }, null, 4)}</pre> */}
+          {/* <Button type="submit" variant="contained">
+            Submit
+          </Button> */}
+
+          <Grid
+            item
+            container
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="flex-end"
+            style={{ padding: "10rem" }}
+          >
             <Button
               className="whitespace-nowrap mx-4"
               variant="contained"
               color="secondary"
+              type="submit"
               // disabled={_.isEmpty(dirtyFields) || !isValid}
               style={{
                 padding: "1rem",
@@ -266,24 +315,16 @@ function ShippingTab(props) {
                 paddingRight: "3rem",
               }}
               onClick={(ev) => {
-                dispatch(
-                  addLeave({
-                    leaveCategoryId,
-                    numberOfDaysAllowed,
-                    fromDate,
-                    toDate,
-                  })
-                );
                 ev.stopPropagation();
-                handleDepartementCreatedMessageClick(ev);
+                handleCreateSalaryScaleMessageClick(ev);
               }}
             >
-              Create
+              Save
             </Button>
           </Grid>
-        </Grid>
-      </motion.div>
-    </>
+        </Form>
+      )}
+    </Formik>
   );
 }
 

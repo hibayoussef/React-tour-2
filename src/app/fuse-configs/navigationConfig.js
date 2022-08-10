@@ -336,14 +336,14 @@ const tempNavigation = [
             exact: true,
             auth: authRoles.user,
           },
-          // {
-          //   id: "leaves-section-add-number-of-leaves",
-          //   title: "select Number of leaves",
-          //   type: "item",
-          //   url: "/apps/leaves-section/number-of-leaves",
-          //   exact: true,
-          //   auth: authRoles.admin,
-          // },
+          {
+            id: "leaves-section-add-number-of-leaves",
+            title: "select Number of leaves",
+            type: "item",
+            url: "/apps/leaves-section/number-of-leaves-categories",
+            exact: true,
+            auth: authRoles.user,
+          },
         ],
       },
 

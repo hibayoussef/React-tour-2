@@ -6,6 +6,7 @@ import reviewInvoices from "./reviewInvoiceSlice";
 import paymentInvoices from "./paymentInvoiceSlice";
 import completeInvoices from "./completeInvoiceSlice";
 import rejectedInvoices from "./rejectedInvoiceSlice";
+import inAnalysticInvoices from "./inanalysticInvoiceSlice";
 
 const reducer = combineReducers({
   invoice,
@@ -15,6 +16,7 @@ const reducer = combineReducers({
   paymentInvoices,
   completeInvoices,
   rejectedInvoices,
+  inAnalysticInvoices,
 });
 
 export default reducer;

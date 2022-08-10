@@ -144,6 +144,7 @@ function AnalyticsDashboardApp() {
             <motion.div variants={item} className="widget w-full p-16">
               <Widget9 data={widgets.widget9} />
             </motion.div>
+
           </div>
         </div>
       </motion.div>

@@ -7,16 +7,16 @@ import { useFormContext } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import _ from "@lodash";
-import { addLeave } from "../store/leaveSlice";
+// import { addInvoice, removeProduct } from "../../store/invoiceSlice";
 
-function AddNumberOfLeaveHeader(props) {
+function NumberOfLeavesHeader(props) {
   const dispatch = useDispatch();
   const methods = useFormContext();
   const theme = useTheme();
   const history = useHistory();
 
   function handleSaveInvoice() {
-    dispatch(addDepartement(getValues()));
+    // dispatch(addInvoice(getValues()));
   }
 
   function handleRemoveProduct() {
@@ -36,7 +36,7 @@ function AddNumberOfLeaveHeader(props) {
             className="flex items-center sm:mb-12"
             component={Link}
             role="button"
-            to="/apps/leaves-section/leaves"
+            to="/apps/leaves-section/number-of-leaves"
             color="inherit"
           >
             <Icon className="text-20">
@@ -66,6 +66,9 @@ function AddNumberOfLeaveHeader(props) {
               <Typography className="text-16 sm:text-20 truncate font-semibold">
                 {name || "New Leave"}
               </Typography>
+              {/* <Typography variant="caption" className="font-medium">
+                Invoice Detail
+              </Typography> */}
             </motion.div>
           </div>
         </div>
@@ -74,4 +77,4 @@ function AddNumberOfLeaveHeader(props) {
   );
 }
 
-export default AddNumberOfLeaveHeader;
+export default NumberOfLeavesHeader;

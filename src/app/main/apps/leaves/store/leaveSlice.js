@@ -41,11 +41,14 @@ export const addLeave = createAsyncThunk(
 export const addNumberOfLeaves = createAsyncThunk(
   "leavesApp/leave/addNumberOfLeaves",
   async (numberOfLeaves, { dispatch, getState }) => {
-    console.log("numberOfLeaves: ", numberOfLeaves);
-    const response = await axios.put("/auth-for-admin/user-leaves-categories", numberOfLeaves);
+    console.log("leaves: ", numberOfLeaves);
+    const response = await axios.put(
+      "/auth-for-admin/user-leaves-categories",
+      numberOfLeaves
+    );
     const data = await response.data.data;
     console.log("Hi I am Here in add new numberOfLeaves: ", data);
-    // dispatch(getSalaryScales());
+    dispatch(getLeaves());
 
     return data;
   }

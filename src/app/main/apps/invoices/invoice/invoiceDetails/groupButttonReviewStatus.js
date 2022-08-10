@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GroupButttonReviewStatus = (id) => {
+const GroupButttonReviewStatus = ({ id, invoice, iban, grossAmount }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -142,7 +142,7 @@ const GroupButttonReviewStatus = (id) => {
             </Button>
             <Button
               onClick={(ev) => {
-                dispatch(rejectInvoice(id?.id));
+                dispatch(rejectInvoice(id));
                 rejectInvoiceHandleClick(ev);
                 handleClose();
               }}
@@ -155,9 +155,7 @@ const GroupButttonReviewStatus = (id) => {
           </div>
         </DialogActions>
       </Dialog>
-
-      {/* End reject Dialog */}
-
+      ;{/* End reject Dialog */}
       {/* Confirm Dialog */}
       <Dialog
         classes={{ paper: classes.paper }}
@@ -192,7 +190,14 @@ const GroupButttonReviewStatus = (id) => {
             </Button>
             <Button
               onClick={(ev) => {
-                dispatch(confirmReview(id?.id));
+                invoice["grossAmount"] = grossAmount;
+                if (!invoice["beneficiary"]) invoice["beneficiary"] = {};
+                invoice["beneficiary"]["iban"] = iban;
+                // invoice["beneficiary"]["branchName"] = branchName;
+                // invoice["beneficiary"]["bankName"] = bankName;
+                // invoie["beneficiary"]["bankCode"]= bankCode;
+                console.log("invoice inside onClick: ", invoice);
+                dispatch(confirmReview({ id, invoice }));
                 confirmReviewHandleClick(ev);
                 handleConfirmDialogClose();
               }}
@@ -205,8 +210,7 @@ const GroupButttonReviewStatus = (id) => {
           </div>
         </DialogActions>
       </Dialog>
-
-      {/* End Confirm Dialog */}
+      ;{/* End Confirm Dialog */}
     </Fragment>
   );
 };

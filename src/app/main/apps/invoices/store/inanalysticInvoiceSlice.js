@@ -5,9 +5,8 @@ import {
 } from "@reduxjs/toolkit";
 import axios from "axios";
 
-
-export const getReviewInvoices = createAsyncThunk(
-  "invoicesApp/invoices/getReviewInvoices",
+export const getInAnalyInvoices = createAsyncThunk(
+  "invoicesApp/invoices/getInAnalysticInvoices",
   async () => {
     const response = await axios.get("/invoices/cruds");
     const data = await response.data.data;
@@ -32,18 +31,18 @@ export const removeInvoice = createAsyncThunk(
   }
 );
 
-const reviewInvoicesAdapter = createEntityAdapter({});
+const InAnalysticInvoicesAdapter = createEntityAdapter({});
 
 export const {
-  selectAll: selectReviewInvoices,
-  selectById: selectReviewInvoiceById,
-} = reviewInvoicesAdapter.getSelectors(
-  (state) => state.invoicesApp.reviewInvoices
+  selectAll: selectInAnalysticInvoices,
+  selectById: selectInAnalysticInvoiceById,
+} = InAnalysticInvoicesAdapter.getSelectors(
+  (state) => state.invoicesApp.inAnalysticInvoices
 );
 
-const reviewInvoicesSlice = createSlice({
-  name: "invoicesApp/invoices",
-  initialState: reviewInvoicesAdapter.getInitialState({
+const inanalysticInvoicesSlice = createSlice({
+  name: "invoicesApp/InAnalysticInvoices",
+  initialState: InAnalysticInvoicesAdapter.getInitialState({
     searchText: "",
   }),
   reducers: {
@@ -56,18 +55,21 @@ const reviewInvoicesSlice = createSlice({
   },
   extraReducers: {
     [removeInvoice.fulfilled]: (state, action) =>
-      reviewInvoicesAdapter.removeOne(state, action.payload),
-    [getReviewInvoices.fulfilled]: (state, { payload }) => {
-      console.log("payload: ", payload);
-      const data = payload.filter((u) => u.status === "review_pending");
+      InAnalysticInvoicesAdapter.removeOne(state, action.payload),
+    [getInAnalyInvoices.fulfilled]: (state, { payload }) => {
+      console.log(
+        "payload innnnnnnnnnnnnnnnnnnnnnnnnnnnnnafafafafaf: ",
+        payload
+      );
+      const data = payload.filter((u) => u.status === "in_analyzing_process");
       console.log("data approval: ", data);
-      reviewInvoicesAdapter.setAll(state, data);
+      InAnalysticInvoicesAdapter.setAll(state, data);
       state.searchText = "";
       console.log("innnnnn: ", data);
     },
   },
 });
 
-export const { setInvoicesSearchText } = reviewInvoicesSlice.actions;
+export const { setInvoicesSearchText } = inanalysticInvoicesSlice.actions;
 
-export default reviewInvoicesSlice.reducer;
+export default inanalysticInvoicesSlice.reducer;

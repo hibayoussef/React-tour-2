@@ -36,22 +36,31 @@ const InvoiceDetails = () => {
   const classes = useStyles();
   const theme = useTheme();
   const routeParams = useParams();
-  const [invoice, setInvoice] = useState([]);
+  const [invoice, setInvoice] = useState({});
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
   const [selectedIndex, setSelectedIndex] = React.useState(1);
   const breakpoint = useMediaQuery(theme.breakpoints.down("sm"));
   // const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
+  const [iban, setIban] = useState(invoice?.beneficiary?.iban || "");
+  const [grossAmount, setGrossAmount] = useState(invoice?.grossAmount);
+
   useEffect(() => {
     getInvoice(routeParams).then((response) => {
+      for (const { key, value, label } of invoice?.dataBoxes) {
+        if (label === "invoice") invoice[key] || value;
+        else {
+          if (!invoice[label]) invoice[label] = {};
+          invoice[label][key] = invoice[label][key] || value;
+        }
+      }
       setInvoice(response);
     });
   }, []);
 
   // beneficiery
   let { beneficiary } = invoice;
-  console.log("beneficiary......:", beneficiary);
 
   beneficiary = {
     beneficiaryName: "Beta apps LLC",
@@ -67,9 +76,6 @@ const InvoiceDetails = () => {
   };
 
   invoice.beneficiary = beneficiary;
-
-  console.log("beneficiary......after:", beneficiary);
-  console.log("invoice ABC: ", invoice);
 
   // OCR
   let dataBoxes = [
@@ -115,107 +121,7 @@ const InvoiceDetails = () => {
     },
   ];
 
-  console.log("databoxes: ", dataBoxes);
-
   invoice.dataBoxes = dataBoxes;
-
-  console.log("dataBoxesdataBoxes: ", invoice.dataBoxes[0].value);
-
-  const compareKeys = (dataBoxesValue, key, value) => {
-    switch (key) {
-      case "beneficiaryName": {
-        if (value === null || value === "" || value === undefined) {
-          const valueBene = dataBoxesValue;
-          return valueBene;
-        } else {
-          return value;
-        }
-      }
-      case "iban": {
-        if (value === null || value === "" || value === undefined) {
-          const valueBene = dataBoxesValue;
-          return valueBene;
-        } else {
-          return value;
-        }
-      }
-      case "swiftCode": {
-        if (value === null || value === "" || value === undefined) {
-          const valueBene = dataBoxesValue;
-          return valueBene;
-        } else {
-          return value;
-        }
-      }
-      case "accountNumber": {
-        if (value === null || value === "" || value === undefined) {
-          const valueBene = dataBoxesValue;
-          return valueBene;
-        } else {
-          return value;
-        }
-      }
-      case "branchCode": {
-        if (value === null || value === "" || value === undefined) {
-          const valueBene = dataBoxesValue;
-          return valueBene;
-        } else {
-          return value;
-        }
-      }
-      case "bankName": {
-        if (value === null || value === "" || value === undefined) {
-          const valueBene = dataBoxesValue;
-          return valueBene;
-        } else {
-          return value;
-        }
-      }
-      case "bankCode": {
-        if (value === null || value === "" || value === undefined) {
-          const valueBene = dataBoxesValue;
-          return valueBene;
-        } else {
-          return value;
-        }
-      }
-      case "branchName": {
-        if (value === null || value === "" || value === undefined) {
-          const valueBene = dataBoxesValue;
-          return valueBene;
-        } else {
-          return value;
-        }
-      }
-      case "branchAddress": {
-        if (value === null || value === "" || value === undefined) {
-          const valueBene = dataBoxesValue;
-          return valueBene;
-        } else {
-          return value;
-        }
-      }
-      case "branchCode": {
-        if (value === null || value === "" || value === undefined) {
-          const valueBene = dataBoxesValue;
-          return valueBene;
-        } else {
-          return value;
-        }
-      }
-      case "clearanceCode": {
-        if (value === null || value === "" || value === undefined) {
-          const valueBene = dataBoxesValue;
-          console.log("clear code value: ", valueBene);
-          return valueBene;
-        } else {
-          return value;
-        }
-      }
-      default:
-        return;
-    }
-  };
 
   const handleClick = () => {
     console.info(`You clicked ${options[selectedIndex]}`);
@@ -238,13 +144,17 @@ const InvoiceDetails = () => {
     setOpen(false);
   };
 
-  console.log("invoice url: ", invoice?.file?.url);
-  console.log("invoice tara : ", invoice);
-
   const statusGropButton = (status, id) => {
     switch (status) {
       case "review_pending":
-        return <GroupButttonReviewStatus id={id} />;
+        return (
+          <GroupButttonReviewStatus
+            id={id}
+            invoice={invoice}
+            grossAmount={+grossAmount}
+            iban={iban}
+          />
+        );
       case "approval_pending":
         return <GroupButttonApproveStatus id={id} />;
       case "payment_pending":
@@ -262,17 +172,15 @@ const InvoiceDetails = () => {
         <Grid item xs={7} sm={7}>
           {/* pdf viewer */}
           <object
-            // data={invoice?.file?.url}
-            data="https://documentcloud.adobe.com/view-sdk-demo/PDFs/Bodea%20Brochure.pdf"
+            data={invoice?.file?.url}
+            // data="https://documentcloud.adobe.com/view-sdk-demo/PDFs/Bodea%20Brochure.pdf"
             type="application/pdf"
             width="100%"
             height="100%"
           >
             <p>
               Alternative text - include a link{" "}
-              <a href="https://documentcloud.adobe.com/view-sdk-demo/PDFs/Bodea%20Brochure.pdf">
-                to the PDF!
-              </a>
+              <a href={invoice?.file?.url}>to the PDF!</a>
             </p>
           </object>
         </Grid>
@@ -402,9 +310,11 @@ const InvoiceDetails = () => {
                 <TextField
                   className="mt-8 mb-16"
                   id="outlined-size-normal"
-                  value={invoice.netAmount || ""}
+                  value={invoice?.netAmount || ""}
+                  name={"netAmount"}
                   variant="outlined"
                   fullWidth
+                  // onChange={onChange}
                 />
               </Grid>
             </Grid>
@@ -425,9 +335,11 @@ const InvoiceDetails = () => {
                 <TextField
                   className="mt-8 mb-16"
                   id="outlined-size-normal"
-                  value={invoice.taxNumber || ""}
                   variant="outlined"
                   fullWidth
+                  value={invoice?.taxNumber || ""}
+                  // onChange={onChange}
+                  // name={"taxNumber"}
                 />
               </Grid>
             </Grid>
@@ -449,9 +361,11 @@ const InvoiceDetails = () => {
                   className="mt-8 mb-16"
                   // label="Size"
                   id="outlined-size-normal"
-                  value={invoice.grossAmount || ""}
                   variant="outlined"
                   fullWidth
+                  value={grossAmount}
+                  onChange={(e) => setGrossAmount(e.target.value)}
+                  // name={"grossAmount"}
                 />
               </Grid>
             </Grid>
@@ -480,13 +394,12 @@ const InvoiceDetails = () => {
                   className="mt-8 mb-16"
                   // label="Size"
                   id="outlined-size-normal"
-                  value={compareKeys(
-                    invoice.dataBoxes[0].value,
-                    "bankName",
-                    invoice.beneficiary.beneficiaryName
-                  )}
                   variant="outlined"
                   fullWidth
+                  // ----
+                  value={invoice?.beneficiary?.beneficiaryName || ""}
+                  // onChange={onChange}
+                  // name={"beneficiary.beneficiaryName"}
                 />
               </Grid>
             </Grid>
@@ -508,13 +421,10 @@ const InvoiceDetails = () => {
                   className="mt-8 mb-16"
                   // label="Size"
                   id="outlined-size-normal"
-                  value={compareKeys(
-                    invoice.dataBoxes[1].value,
-                    "bankName",
-                    invoice.beneficiary.iban
-                  )}
+                  value={iban}
                   variant="outlined"
                   fullWidth
+                  onChange={(e) => setIban(e.target.value)}
                 />
               </Grid>
             </Grid>
@@ -537,13 +447,11 @@ const InvoiceDetails = () => {
                   // label="Size"
                   id="outlined-size-normal"
                   // value={beneficiary.accountNumber || ""}
-                  value={compareKeys(
-                    invoice.dataBoxes[2].value,
-                    "accountNumber",
-                    invoice.beneficiary.accountNumber
-                  )}
+                  value={invoice?.beneficiary?.accountNumber || ""}
                   variant="outlined"
                   fullWidth
+                  // onChange={onChange}
+                  // name={"beneficiary.accountNumber"}
                 />
               </Grid>
             </Grid>
@@ -565,13 +473,11 @@ const InvoiceDetails = () => {
                   className="mt-8 mb-16"
                   // label="Size"
                   id="outlined-size-normal"
-                  value={compareKeys(
-                    invoice.dataBoxes[3].value,
-                    "swiftCode",
-                    invoice.beneficiary.swiftCode
-                  )}
+                  value={invoice?.beneficiary?.swiftCode || ""}
                   variant="outlined"
                   fullWidth
+                  // onChange={onChange}
+                  // name={"beneficiary.swiftCode"}
                 />
               </Grid>
             </Grid>
@@ -593,13 +499,11 @@ const InvoiceDetails = () => {
                   className="mt-8 mb-16"
                   // label="Size"
                   id="outlined-size-normal"
-                  value={compareKeys(
-                    invoice.dataBoxes[4].value,
-                    "bankName",
-                    invoice.beneficiary.bankName
-                  )}
+                  value={invoice?.beneficiary?.bankName || ""}
                   variant="outlined"
                   fullWidth
+                  // onChange={onChange}
+                  // name={"beneficiary.bankName"}
                 />
               </Grid>
             </Grid>
@@ -621,13 +525,11 @@ const InvoiceDetails = () => {
                   className="mt-8 mb-16"
                   // label="Size"
                   id="outlined-size-normal"
-                  value={compareKeys(
-                    invoice.dataBoxes[5].value,
-                    "bankCode",
-                    invoice.beneficiary.bankCode
-                  )}
+                  value={invoice?.beneficiary?.bankCode || ""}
                   variant="outlined"
                   fullWidth
+                  // onChange={onChange}
+                  // name={"beneficiary.bankCode"}
                 />
               </Grid>
             </Grid>
@@ -649,13 +551,11 @@ const InvoiceDetails = () => {
                   className="mt-8 mb-16"
                   // label="Size"
                   id="outlined-size-normal"
-                  value={compareKeys(
-                    invoice.dataBoxes[6].value,
-                    "branchName",
-                    invoice.beneficiary.branchName
-                  )}
+                  value={invoice?.beneficiary?.branchName || ""}
                   variant="outlined"
                   fullWidth
+                  // onChange={onChange}
+                  // name={"beneficiary.branchName"}
                 />
               </Grid>
             </Grid>
@@ -677,13 +577,11 @@ const InvoiceDetails = () => {
                   className="mt-8 mb-16"
                   // label="Size"
                   id="outlined-size-normal"
-                  value={compareKeys(
-                    invoice.dataBoxes[7].value,
-                    "branchAddress",
-                    invoice.beneficiary.branchAddress
-                  )}
+                  value={invoice?.beneficiary?.branchAddress || ""}
                   variant="outlined"
                   fullWidth
+                  // onChange={onChange}
+                  // name={"beneficiary.branchAddress"}
                 />
               </Grid>
             </Grid>
@@ -705,13 +603,11 @@ const InvoiceDetails = () => {
                   className="mt-8 mb-16"
                   // label="Size"
                   id="outlined-size-normal"
-                  value={compareKeys(
-                    invoice.dataBoxes[8].value,
-                    "branchCode",
-                    invoice.beneficiary.branchCode
-                  )}
+                  value={invoice?.beneficiary?.branchCode || ""}
                   variant="outlined"
                   fullWidth
+                  // onChange={onChange}
+                  // name={"beneficiary.branchCode"}
                 />
               </Grid>
             </Grid>
@@ -734,13 +630,11 @@ const InvoiceDetails = () => {
                   // label="Size"
                   id="outlined-size-normal"
                   // value={beneficiary.clearanceCode || ""}
-                  value={compareKeys(
-                    invoice.dataBoxes[9].value,
-                    "clearanceCode",
-                    invoice.beneficiary.clearanceCode
-                  )}
+                  value={invoice?.beneficiary?.clearanceCode || ""}
                   variant="outlined"
                   fullWidth
+                  // onChange={onChange}
+                  // name={"beneficiary.clearanceCode"}
                 />
               </Grid>
             </Grid>

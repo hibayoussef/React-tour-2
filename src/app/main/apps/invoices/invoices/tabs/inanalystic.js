@@ -10,7 +10,10 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { withRouter } from "react-router-dom";
 import FuseLoading from "@fuse/core/FuseLoading";
-import { getInvoices, selectInvoices } from "../../store/invoicesSlice";
+import {
+  getInAnalyInvoices,
+  selectInAnalysticInvoices,
+} from "../../store/inanalysticInvoiceSlice";
 import InvoicesTableHead from "../InvoicesTableHead";
 import moment from "moment";
 import Chip from "@mui/material/Chip";
@@ -21,7 +24,6 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import ErrorIcon from "@material-ui/icons/Error";
 
 const useStyles = makeStyles(() => ({
   divider: {
@@ -30,12 +32,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function AllTable(props) {
+function InanalysticTable(props) {
+  console.log("InanalysticTable");
   const classes = useStyles();
   const dispatch = useDispatch();
-  const invoices = useSelector(selectInvoices);
+  const invoices = useSelector(selectInAnalysticInvoices);
   const searchText = useSelector(
-    ({ invoicesApp }) => invoicesApp.invoices.searchText
+    ({ invoicesApp }) => invoicesApp.inAnalysticInvoices.searchText
   );
 
   const [loading, setLoading] = useState(true);
@@ -55,7 +58,7 @@ function AllTable(props) {
   };
 
   useEffect(() => {
-    dispatch(getInvoices()).then(() => setLoading(false));
+    dispatch(getInAnalyInvoices()).then(() => setLoading(false));
   }, [dispatch]);
 
   useEffect(() => {
@@ -95,9 +98,9 @@ function AllTable(props) {
     setSelected([]);
   }
 
-  function handleClick(item) {
-    props.history.push(`/apps/invoices-section/invoices/${item.id}`);
-  }
+  //   function handleClick(item) {
+  //     props.history.push(`/apps/invoices-section/invoices/${item.id}`);
+  //   }
 
   function handleCheck(event, id) {
     const selectedIndex = selected.indexOf(id);
@@ -127,69 +130,20 @@ function AllTable(props) {
     setRowsPerPage(event.target.value);
   }
 
-  const chipColor = (status) => {
-    switch (status) {
-      case "approval_pending":
-        return {
-          fontSize: "1.2rem",
-          backgroundColor: "#4169E1",
-          color: "#D3D3D3",
-        };
-      case "review_pending":
-        return {
-          fontSize: "1.2rem",
-          backgroundColor: "#4169E1",
-          color: "#D3D3D3",
-        };
-      case "payment_pending":
-        return {
-          fontSize: "1.2rem",
-          backgroundColor: "#4169E1",
-          color: "#D3D3D3",
-        };
-      case "completed":
-        return {
-          fontSize: "1.2rem",
-          backgroundColor: "#228B22",
-          color: "#D3D3D3",
-        };
-      case "rejected":
-        return {
-          fontSize: "1.2rem",
-          backgroundColor: "#ff0e0e",
-          color: "#D3D3D3",
-        };
-      case "failed":
-        return {
-          fontSize: "1.2rem",
-          backgroundColor: "#ff0e0e",
-          color: "#D3D3D3",
-        };
-      default:
-        return {
-          fontSize: "1.2rem",
-          backgroundColor: "#ff0e0e",
-          color: "#D3D3D3",
-        };
-    }
-  };
-
   const statusIcon = (status) => {
     switch (status) {
       case "approval_pending":
-        return <VerifiedUserIcon style={{ color: "#f1f4f8" }} />;
+        return <VerifiedUserIcon />;
       case "review_pending":
-        return <VisibilityIcon style={{ color: "#f1f4f8" }} />;
+        return <VisibilityIcon />;
       case "payment_pending":
-        return <CreditCardIcon style={{ color: "#f1f4f8" }} />;
+        return <CreditCardIcon />;
       case "completed":
-        return <CheckCircleIcon style={{ color: "#f1f4f8" }} />;
+        return <CheckCircleIcon />;
       case "rejected":
-        return <CancelIcon style={{ color: "#f1f4f8" }} />;
-      case "failed":
-        return <ErrorIcon style={{ color: "#f1f4f8" }} />;
+        return <CancelIcon />;
       default:
-        return <CancelIcon style={{ color: "#f1f4f8" }} />;
+        return <CancelIcon />;
     }
   };
 
@@ -204,7 +158,9 @@ function AllTable(props) {
         animate={{ opacity: 1, transition: { delay: 0.1 } }}
         className="flex flex-1 items-center justify-center h-full"
       >
-        <h3 style={{ paddingTop: "8rem" }}>There are no Invoices!</h3>
+        <h3 style={{ paddingTop: "8rem" }}>
+          There are no in-analystic Invoices!
+        </h3>
       </motion.div>
     );
   }
@@ -248,15 +204,15 @@ function AllTable(props) {
                   aria-checked={isSelected}
                   tabIndex={-1}
                   key={n.id}
-                  selected={isSelected}
-                  onClick={(event) => handleClick(n)}
+                  //   selected={isSelected}
+                  //   onClick={(event) => handleClick(n)}
                 >
                   <TableCell
                     className="w-40 md:w-64 text-center"
                     padding="none"
                   >
                     <Checkbox
-                      checked={isSelected}
+                      //   checked={isSelected}
                       onClick={(event) => event.stopPropagation()}
                       onChange={(event) => handleCheck(event, n.id)}
                     />
@@ -292,8 +248,7 @@ function AllTable(props) {
                     scope="row"
                   >
                     <Chip
-                      // style={{ fontSize: "1.2rem", backgroundColor: "red" }}
-                      style={chipColor(n.status)}
+                      style={{ fontSize: "1.2rem" }}
                       icon={statusIcon(n.status)}
                       label={n.status}
                     />
@@ -339,4 +294,4 @@ function AllTable(props) {
   );
 }
 
-export default withRouter(AllTable);
+export default withRouter(InanalysticTable);

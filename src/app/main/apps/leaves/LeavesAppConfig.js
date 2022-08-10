@@ -17,12 +17,17 @@ const LeavesAppConfig = {
     },
     {
       path: "/apps/leaves-section/leaves/number-of-leaves",
-      component: lazy(() => import("./number-of-leaves/AddNumberOfLeave")),
+      component: lazy(() => import("./number-of-leaves/NumberOfLeaves")),
     },
 
     {
       path: "/apps/leaves-section/leaves/:leaveId",
       component: lazy(() => import("./leave/Leave")),
+    },
+
+    {
+      path: "/apps/leaves-section/number-of-leaves-categories",
+      component: lazy(() => import("./numberOfLeavesTable/NumberOfLeaves")),
     },
 
     {

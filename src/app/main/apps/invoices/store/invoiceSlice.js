@@ -5,25 +5,20 @@ import { getInvoices } from "./invoicesSlice";
 
 export const getInvoice = async (params) => {
   const response = await axios.get(`/invoices/cruds/${params.invoiceId}`);
-  console.log("id: ", params.invoiceId);
   return response.data.data;
 };
 
 export const getUsers = async () => {
   const response = await axios.get("/users/for-admin");
-  console.log("get Users response:  ", response);
   return response.data.data;
 };
 
 export const addInvoice = createAsyncThunk(
   "invoicesApp/invoice/addInvoice",
   async (invoice, { dispatch, getState }) => {
-    console.log("backend-1-invoice: ", invoice);
     const response = await axios.post("/invoices/cruds", invoice);
-    console.log("response: ", response);
 
     const data = await response.data.data;
-    console.log("Hi I am Here in add new invoice: ", data);
     dispatch(getInvoices());
 
     return data;
@@ -39,8 +34,6 @@ export const rejectInvoice = createAsyncThunk(
         console.log("error response: ", error);
       });
     const data = await response.data.data;
-    console.log("reject invoices: ", data);
-    // dispatch(getInvoice(data.id));
     dispatch(getInvoices());
 
     return data;
@@ -49,15 +42,13 @@ export const rejectInvoice = createAsyncThunk(
 
 export const confirmReview = createAsyncThunk(
   "invoicesApp/invoice/confirmReview",
-  async (id, { dispatch }) => {
+  async ({ id, invoice }, { dispatch }) => {
     const response = await axios
-      .post(`/invoices/flow/${id}/review`)
+      .post(`/invoices/flow/${id}/review`, invoice)
       .catch((error) => {
         console.log("error response: ", error);
       });
     const data = await response.data.data;
-    console.log("review invoices: ", data);
-    // dispatch(getInvoice(data.id));
     dispatch(getInvoices());
     return data;
   }
@@ -72,8 +63,6 @@ export const markAsPaid = createAsyncThunk(
         console.log("error response: ", error);
       });
     const data = await response.data.data;
-    console.log("mark as paid invoices: ", data.id);
-    // dispatch(getInvoice(data.id));
     dispatch(getInvoices());
     return data;
   }
@@ -88,8 +77,6 @@ export const approveInvoice = createAsyncThunk(
         console.log("error response: ", error);
       });
     const data = await response.data.data;
-    console.log("approve invoices: ", data.id);
-    // dispatch(getInvoice(data.id));
     dispatch(getInvoices());
     return data;
   }
@@ -98,13 +85,6 @@ export const approveInvoice = createAsyncThunk(
 export const assignToUser = createAsyncThunk(
   "invoicesApp/invoice/assignToUser",
   async ({ invoiceId, userId, assignmentNote }, { dispatch }) => {
-    console.log("hi in new function");
-    console.log(
-      "invoiceId, userId, message",
-      invoiceId,
-      userId,
-      assignmentNote
-    );
     const response = await axios
       .post(`/invoices/flow/${invoiceId}/assign-to-user`, {
         userId,
@@ -114,9 +94,6 @@ export const assignToUser = createAsyncThunk(
         console.log("error response: ", error);
       });
     const data = await response.data.data;
-    console.log("approve invoices: ", data);
-
-    // dispatch(getInvoice(data?.id));
     dispatch(getInvoices());
     return data;
   }
@@ -132,41 +109,9 @@ export const removeProduct = createAsyncThunk(
   }
 );
 
-// export const saveInvoice = createAsyncThunk(
-//   "invoicesApp/invoice/saveInvoice",
-//   async (invoiceData, { dispatch, getState }) => {
-//     const { invoice } = getState().invoicesApp;
-
-//     const response = await axios.post("/invoices/cruds", {
-//       ...invoice,
-//       ...invoiceData,
-//     });
-//     const data = await response.data;
-
-//     return data;
-//   }
-// );
-// export const saveInvoice = createAsyncThunk(
-//   "invoicesApp/invoice/saveInvoice",
-// async (
-//   invoice,
-//   netAmount,
-//   taxNumber,
-//   grossAmount,
-//   issueDate,
-//   dueDate,
-//     { dispatch, getState }
-//   ) => {
-//     const fd = new FormData();
-//     fd.append("invoice", invoice);
-//     fd.append("data", JSON.stringify({ title, price, description, category }));
-//   }
-// );
-
 export const saveInvoice = createAsyncThunk(
   "invoicesApp/invoice/saveInvoice",
   async (invoice, netAmount, taxNumber, grossAmount, issueDate, dueDate) => {
-    console.log(invoice, netAmount, taxNumber, grossAmount, issueDate, dueDate);
     const fd = new FormData();
     fd.append("invoice", invoice);
     fd.append("data", {
